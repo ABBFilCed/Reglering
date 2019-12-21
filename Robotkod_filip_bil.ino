@@ -23,7 +23,8 @@ float dist = 0;
 
 void onConnectionEstablished();
 
-//defineerar namn, lösenord, port mm. som mikrokontrollern ska koppla upp sig till samt kopplar uopp sig till det.
+//Tredjeparts bibliotek för MQTT
+//definierar namn, lösenord, port mm. som mikrokontrollern ska koppla upp sig till samt kopplar upp sig till det.
 EspMQTTClient client(
 "ABB_Indgym",           // Wifi ssid
   "7Laddaremygglustbil",           // Wifi password
