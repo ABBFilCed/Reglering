@@ -1,0 +1,179 @@
+/* Stylar de olika objekten på hemsidan och bestämmer vart de ska ligga
+Jag har försökt använda procent istället för pixlar när jag placerat objekten förn att göra att hemsidan fungerar på olika stora skärmar */
+
+h1 {
+    text-align: center;
+    font-size: 40px;
+    background-color: lightgreen;
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+    position: relative;
+    margin-left: -10px;
+    margin-top: -10px;
+    margin-right: -10px;
+    height: 80px;
+
+    
+}
+
+input {
+    font-size: 20px;
+    font-family: 'Times New Roman', Times, serif;
+
+}
+
+
+
+b{
+    margin-left: 50px;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+}
+
+body {
+    background-color: white;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.messages {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    color: black;
+    background-color: lightgray;
+    border: lightgray;
+    border-width: 2px;
+    border-style: solid;
+    width: 40%;
+    height: 260px;
+    overflow: scroll;
+}
+
+
+
+.velocitybox{
+    margin-left: 6.5%;
+    background-color: lightgreen;
+    border: lightgreen;
+    border-width: 2px;
+    border-style: solid;
+    color: black;
+    width: 400px;
+    margin-bottom: 20px
+}
+
+.setvelocity{
+    background-color: white ;
+    color: black;
+    border: none;
+}
+
+.inputvelocity{
+    width: 60px;
+    margin-bottom: 20px;
+}
+
+
+
+
+
+.button2{
+    background-color: rgb(0, 255, 0) ;
+    color: black;
+    width: 200px;
+    height: 50px;
+    margin-left: 6.5%;
+    
+    border: none;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.button3{
+    background-color: red ;
+    color: black;
+    width: 200px;
+    height: 50px;
+  
+    border: none;
+    font-family: Arial, Helvetica, sans-serif
+   
+}
+
+.button4{
+    background-color: lightgray ;
+    color: black;
+    width: 200px;
+    height: 50px;
+    margin-left: 6.5%;
+
+    border: none;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.button5{
+    background-color: lightgray ;
+    color: black;
+    width: 200px;
+    height: 50px;
+    border: none;
+    font-family: Arial, Helvetica, sans-serif
+    
+}
+
+.showvelocity12{
+    background-color: lightgray;
+    border: lightgray;
+    border-width: 2px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    margin-left: 55%;
+    margin-top: -80px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    width: 150px;
+    height:90px;
+}
+
+.showvelocity22{
+    background-color: lightgray;
+    border: lightgray;
+    border-width: 2px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    margin-left: 76%;
+    margin-top: -94px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    width: 150px;
+    height:90px;
+}
+
+.showvelocity1{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 50px; 
+    margin-left: 10px;
+    color: black
+}
+
+.showvelocity2{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 50px; 
+    margin-left: 10px;
+    color: black
+}
+
+
+
+.chart{
+    width: 800px;
+    height: 600px;
+    margin-left: 43%;
+    margin-top: -26%;
+}
+
+
+
+
+
+

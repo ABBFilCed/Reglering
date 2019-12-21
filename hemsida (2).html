@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>mqtt-demo: A simple web application that can subscribe to topics from an MQTT broker over websockets</title>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+      <link rel="stylesheet" type="text/css" media="screen" href="style2.css" />          <!--refererar till stylesheetet för hemsidan -->
+      <script>
+            function startConnect() {
+                // Generate a random client ID
+                clientID = "clientID_" + parseInt(Math.random() * 100);
+            
+                //Sätter värdet för variablerna host och port
+                host = "maqiatto.com";
+                port = "8883";
+                
+                // Print output for the user in the messages div
+                document.getElementById("messages").innerHTML += '<span>Connecting to: ' + host + ' on port: ' + port + '</span><br/>';
+                document.getElementById("messages").innerHTML += '<span>Using the following client value: ' + clientID + '</span><br/>';
+              // Initialize new Paho client connection
+                client = new Paho.MQTT.Client(host, Number(port), clientID);
+                // Set callback handlers
+                client.onConnectionLost = onConnectionLost;
+                client.onMessageArrived = onMessageArrived;
+                
+                client.connect({userName : "filip.cederblad@abbindustrigymnasium.se",password : "heykidgofuckaduck",
+                    onSuccess: onConnect,
+                    onFailure: onFail,
+                               });
+
+            }
+            function onFail() {
+                document.getElementById("messages").innerHTML += '<span>ERROR: Connection to: ' + host + ' on port: ' + port + ' failed.</span><br/>'
+
+            }  
+            // definierar de olika topic som vi ska använda
+           let topic1="filip.cederblad@abbindustrigymnasium.se/bil";
+           let topic2="filip.cederblad@abbindustrigymnasium.se/bil1";
+           let topic3="filip.cederblad@abbindustrigymnasium.se/send";
+            // Called when the client connects
+            function onConnect() {
+               
+            console.log(topic1);
+                // Print output for the user in the messages div
+                document.getElementById("messages").innerHTML += '<span>Subscribing to: ' + topic1 + '</span><br/>';
+            console.log(topic2);
+                // Print output for the user in the messages div
+                document.getElementById("messages").innerHTML += '<span>Subscribing to: ' + topic2 + '</span><br/>';
+            console.log(topic3);
+                // Print output for the user in the messages div
+                document.getElementById("messages").innerHTML += '<span>Subscribing to: ' + topic3 + '</span><br/>';
+            
+                // Subscribe to the requested topic
+                 client.subscribe(topic1);
+                 
+                 client.subscribe(topic2);
+                  
+                  client.subscribe(topic3);
+            // Skickar meddelandet connected till topic3
+            message= new Paho.MQTT.Message("connected");
+                message.destinationName=topic3;
+                console.log(message);
+                client.send(message);
+            
+            }
+            
+            // Called when the client loses its connection
+            function onConnectionLost(responseObject) {
+                document.getElementById("messages").innerHTML += '<span>ERROR: Connection lost</span><br/>';
+                if (responseObject.errorCode !== 0) {
+                    document.getElementById("messages").innerHTML += '<span>ERROR: ' + + responseObject.errorMessage + '</span><br/>';
+                }
+            }
+
+            // Called when a message arrives
+            function onMessageArrived(message) {
+               //varje bil skickar sin hastighet till var sin topic. 
+               //Beroende på vilken bil som skickar hastighet så hamnar värdet i en av två rutor på hemsidan.
+               // adddata funktionen lägger till värdet i rätt linje på grafen
+               // kommer det på ett meddelande på en annan topic än de för hastigheterna skrivs det ut i messages lådan
+                if (message.destinationName == "filip.cederblad@abbindustrigymnasium.se/bil") {
+                    document.getElementById("showvelocity1").innerHTML =message.payloadString ;
+                    var Filipvelocity = parseFloat(message.payloadString);
+                    adddata(document.getElementById("velocity").value,Filipvelocity,1)
+                    
+           
+                }
+                if(message.destinationName == "filip.cederblad@abbindustrigymnasium.se/bil1"){
+                    document.getElementById("showvelocity2").innerHTML =message.payloadString ;
+                    var Jennyvelocity = parseFloat(message.payloadString);
+                    adddata(document.getElementById("velocity").value,Jennyvelocity,2)
+                }
+                else{
+
+                console.log("onMessageArrived: " + message.payloadString);
+                document.getElementById("messages").innerHTML += '<span>Topic: ' + message.destinationName + '  | ' + message.payloadString + '</span><br/>';
+                }
+                
+            }
+            
+            // Called when the disconnection button is pressed
+            function startDisconnect() {
+                client.disconnect();
+                document.getElementById("messages").innerHTML += '<span>Disconnected</span><br/>';
+            }
+            
+            //Funktionen kallas på när man trycker på knappen start car och skickar då ett meddelande på topic3
+            function startCar(){
+                
+                    message= new Paho.MQTT.Message("starting car");
+                    message.destinationName=topic3;
+                    console.log(message);
+                    client.send(message);
+
+            }
+            
+            //Funktionen kallas på när man trycker på knappen stop car och skickar då ett meddelande på topic3
+            function stopCar(){
+                
+                    message= new Paho.MQTT.Message("stopping car");
+                    message.destinationName=topic3;
+                    console.log(message);
+                    client.send(message);
+
+            }
+            //Skapar variablera velocity och BVelocity
+            var BVelocity = 0;
+            var velocity = 0;
+            //Körs när knappen set velocity trycks på. Skickar ett meddelande på topic3 som innehåller det som står i rutan bredvid. 
+            //Sätter variablen BVelocity till värdet i rutan
+            function v(){
+                
+                    velocity =document.getElementById("velocity").value;
+                    message= new Paho.MQTT.Message(velocity);
+                    message.destinationName=topic3;
+                    console.log(message);
+                    client.send(message);
+  
+                    BVelocity = document.getElementById("velocity").value
+                    
+
+
+            }
+
+
+
+  
+
+</script>
+            
+
+
+
+
+
+            
+            
+    </head>
+   <body>
+      <!--Skapar interface för hemsidan med alla olika objekt som finns med. 
+        Objekten har olika klasser som används för att styla dom i stylesheetet  -->
+    <div class="wrapper">
+         <h1>Big car controller </h1>
+   
+            <div class = "velocitybox">
+            <br>   
+            <b>Velocity:</b>
+            <input class = "inputvelocity"id="velocity" type="text" name="velocity" value="60">
+            <input  class = "setvelocity"type="button" onclick="v()" value="Set velocity">
+            </div>
+            <div class = "showvelocity12">
+                <b>Filip:</b>  
+                <div class = "showvelocity1"id="showvelocity1"></div>
+            </div>
+            <div class = "showvelocity22">
+                <b>Jenny:</b>  
+                <div class = "showvelocity2"id="showvelocity2"></div>
+            </div>
+        <input  class = "button2" type="button" onclick="startCar()" value="Start Car">
+        <input  class = "button3" type="button" onclick="stopCar()" value="Stop Car"><br><br>
+        <input  class = "button4" type="button" onclick="startConnect()" value="Connect">
+        <input  class = "button5" type="button" onclick="startDisconnect()" value="Disconnect"><br><br>
+<br><br>
+            
+         
+        <div class = "messages"id="messages"></div>
+         
+     </div> 
+     <div class = "chart">
+     <canvas id = "Chart" ></canvas>
+        </div>  
+            
+       
+    
+     <script> 
+     //Skapar en graf som använder värdena som skickas in med adddata funktionen          
+     var canvas = document.getElementById('Chart');
+     var data = {
+         labels: [],
+         datasets: [
+             {
+                 label: "Börvärdet",
+                 fill: false,
+                 lineTension: 0.1,
+                 backgroundColor: "rgba(75,192,192,0.4)",
+                 borderColor: "rgba(78,196,192,1)",
+                 borderCapStyle: 'butt',
+                 borderDash: [],
+                 borderDashOffset: 0.0,
+                 borderJoinStyle: 'miter',
+                 data: [],
+             }, {
+                 label: "Ärvärdet Filip",
+                 fill: false,
+                 lineTension: 0.1,
+                 backgroundColor: "rgba(75,192,192,0.4)",
+                 borderColor: "rgba(74,132,162,1)",
+                 borderCapStyle: 'butt',
+                 borderDash: [],
+                 borderDashOffset: 0.0,
+                 borderJoinStyle: 'miter',
+                 data: [],
+             },{
+                 label: "Ärvärdet Jenny",
+                 fill: false,
+                 lineTension: 0.1,
+                 backgroundColor: "rgba(255,20,147,1)",
+                 borderColor: "rgba(255,20,147,1)",
+                 borderCapStyle: 'butt',
+                 borderDash: [],
+                 borderDashOffset: 0.0,
+                 borderJoinStyle: 'miter',
+                 data: [],
+             },
+           
+         ]
+     };
+     function adddata(data,data_1 ,index){
+       var d = new Date();
+       var n = d.getSeconds();
+     
+       myLineChart.data.datasets[0].data.push(data);
+       myLineChart.data.datasets[index].data.push(data_1);
+       myLineChart.data.labels.push(n);
+     
+       myLineChart.update();
+       }
+     
+     
+      var option = {
+                 chart: {
+                     height: 100,
+                     type: 'line',
+                     animations: {
+                         enabled: true,
+                         easing: 'linear',
+                         dynamicAnimation: {
+                             speed: 1000
+                         }
+                     },
+                     toolbar: {
+                         show: false
+                     },
+                     zoom: {
+                         enabled: false
+                     }
+                 },
+                 dataLabels: {
+                     enabled: false
+                 },
+                 stroke: {
+                     curve: 'smooth'
+                 },
+                 series: [{
+                     data: data,
+                     // data1: data1
+                 }],
+                 markers: {
+                     size: 0
+                 },
+     
+                 yaxis: {
+                     max: 200
+                 },
+                 legend: {
+                     show: false
+                 },
+       }
+     var myLineChart = Chart.Line(canvas,{
+       data:data,
+       options:option
+     });
+     
+     
+     
+     </script>  
+   </body>
+</html>
