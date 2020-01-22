@@ -11,7 +11,7 @@ float currentPulses = 0;
 float Velocity = 0;
 float BVelocity = 0 ;
 float Kp = 9;
-double Ki = 0.0;
+double Ki = 0.01;
 float e = 0;
 int Speed = 0;
 float previousPulses;
